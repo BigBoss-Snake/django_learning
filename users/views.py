@@ -21,8 +21,6 @@ class RegistrationAPIView(APIView):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
 
 class LoginAPIView(APIView):
     permission_classes = (AllowAny,)
@@ -33,6 +31,11 @@ class LoginAPIView(APIView):
         user = request.data.get('user', {})
 
         serializer = self.serializer_class(data=user)
-        serializer.is_valid(raise_exception=True)
+        if serializer.is_valid(raise_exception=True):
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+
+def index(request):
+    return HttpResponse("Hello, world. You're at the polls index.")
