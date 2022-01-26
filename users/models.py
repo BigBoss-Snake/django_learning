@@ -9,7 +9,7 @@ from django.contrib.auth.models import (
 
 class UserManager(BaseUserManager):
    
-    def create_user(self, email, first_name, last_name, password=None,):
+    def create_user(self, email, first_name, last_name, password=None):
        
         if last_name is None:
             raise TypeError('Users must have a username.')
@@ -40,7 +40,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    password = models.CharField(max_length=40)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     update_at = models.DateTimeField(auto_now=True)
@@ -50,7 +49,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
-    @property
     def __str__(self):
         return self.email
 
