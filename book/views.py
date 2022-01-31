@@ -2,14 +2,20 @@ from django.shortcuts import render
 from .models import Books
 from django.http import JsonResponse, HttpResponseRedirect
 from django.views import generic
+from rest_framework.views import APIView
+from .serialazers import BookSerializer
+from rest_framework.permissions import AllowAny
 
 
+class CreateBook(APIView):
+    permission_classes = (AllowAny,)
+    serializer_class = BookSerializer
 
-class BookListView(generic.ListView):
-    model = Books
-    context_object_name = 'book_list'
-    template_name = 'index.html'
-
+    def post(self, request):
+        book = request.data.get('book', {})
+        serializer = self.serializer_class(data=book)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
 
 
 def book_to_dict(book):
