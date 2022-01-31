@@ -33,6 +33,23 @@ class LoginSerializer(serializers.Serializer):
     def validate(self, data):
         email = data.get('email', None)
         password = data.get('password', None)
+
+        if email is None:
+            raise serializers.ValidationError(
+                'An email address is required to log in.'
+            )
+
+        if password is None:
+            raise serializers.ValidationError(
+                'A password is required to log in.'
+            )
+
+        if User.objects.get(email=email).is_active == False:
+            raise serializers.ValidationError(
+                'You need activated your account'
+            )
+        
+
         user = authenticate(email=email, password=password)
         
         if user:
