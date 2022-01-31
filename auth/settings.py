@@ -10,6 +10,7 @@ ALLOWED_HOSTS = []
 
 
 INSTALLED_APPS = [
+    'book.apps.BookConfig',
     'users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
