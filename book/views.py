@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from httplib2 import Response
+from rest_framework.response import Response
 from .models import Books
 from .renderers import BooksJSONRenderer
 from django.http import JsonResponse, HttpResponseRedirect
@@ -20,8 +20,7 @@ class CreateBook(APIView):
         serializer = self.serializer_class(data=book)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data, status = status.HTTP_200_OK)
-
+        return Response({'book' : serializer.data}, status=status.HTTP_201_CREATED)
 
 
 class DetaelBook(APIView):
@@ -32,6 +31,13 @@ class DetaelBook(APIView):
 
     def get(self, request, book_id):
         book = Books.objects.get(id = book_id)
-        serialazer = BookSerializer(book)
-        return Response(serialazer.data, status = status.HTTP_200_OK)
+        serializer = BookSerializer(book)
+        return Response({'book' : serializer.data}, status = status.HTTP_200_OK)
 
+
+class DeleteBook(APIView):
+
+    def delete(self, request, book_id):
+        book = Books.objects.get(id = book_id)
+        book.delete()
+        return Response(f'Your delete book {book.title}', status = status.HTTP_202_ACCEPTED)

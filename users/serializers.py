@@ -24,6 +24,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.Serializer):
+    
     email = serializers.CharField(max_length=255)
     first_name = serializers.CharField(max_length=255, read_only=True)
     last_name = serializers.CharField(max_length=255, read_only=True)
