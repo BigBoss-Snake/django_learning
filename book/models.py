@@ -1,3 +1,4 @@
+from ast import mod
 from django.db import models
 from users.models import User
 
@@ -15,9 +16,18 @@ class BookManager(models.Manager):
 
 class Books(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, primary_key=True)
     author_book = models.CharField(max_length=200)
 
     objects = BookManager()
+
+
+class Category(models.Model):
+    category = models.CharField(max_length=200)
+    book = models.ManyToManyField(Books)
+
+
+    def __str__(self):
+        return self.category
 
 
