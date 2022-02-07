@@ -10,8 +10,10 @@ class BooksAdmin(admin.ModelAdmin):
 class UserAdmin(admin.ModelAdmin):
     list_display = ('email', 'last_name', 'is_active')
     list_filter = ('email', 'last_name', 'is_active')
+    
 
-# class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('category', )
 
 
 admin.site.register(Books, BooksAdmin)

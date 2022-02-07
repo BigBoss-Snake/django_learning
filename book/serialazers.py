@@ -1,6 +1,4 @@
-import email
-from pyexpat import model
-from unicodedata import category
+from curses.ascii import US
 from rest_framework import serializers
 from book.models import Books, Category
 from users.models import User
@@ -35,7 +33,7 @@ class BookSerializer(serializers.Serializer):
                 'The name of the book is not entered'
             )
 
-        if author_book is None:
+        if author_book is None and User.objects.get(email=author_book).count():
             raise serializers.ValidationError(
                 'The author of the book is not entered    '
             )
@@ -58,3 +56,10 @@ class BookSerializer(serializers.Serializer):
                 'author_book': author_book
             }
     
+class CategorySerialazer(serializers.Serializer):
+    category = serializers.CharField(max_length=200)
+
+    class Meta:
+        model = Category
+        fields = ['category']
+

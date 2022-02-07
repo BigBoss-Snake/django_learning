@@ -19,26 +19,26 @@ from book import serialazers
 class CreateBook(APIView):
     permission_classes = (AllowAny,)
     serializer_class = BookSerializer
-    render_class = (BooksJSONRenderer, )
+    renderer_classes = (BooksJSONRenderer, )
 
     def post(self, request):
         book = request.data.get('book', {})
         serializer = self.serializer_class(data=book)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response({'book' : serializer.data}, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class DetaelBook(APIView):
 
     permission_classes = (AllowAny,)
     serializer_class = BookSerializer
-    render_class = (BooksJSONRenderer, )
+    renderer_classes = (BooksJSONRenderer, )
 
     def get(self, request, book_id):
         book = Books.objects.get(id = book_id)
         serializer = BookSerializer(book)
-        return JsonResponse({'book' : serializer.data}, status = status.HTTP_200_OK)
+        return Response(serializer.data, status = status.HTTP_200_OK)
 
 
 class DeleteBook(APIView):
@@ -69,6 +69,7 @@ class UpdateBook(APIView):
 
     permission_classes = (AllowAny,)
     serializer_class = BookSerializer
+    renderer_classes = (BooksJSONRenderer, )
 
     def put(self, request):
         book = request.data.get('book', {})
@@ -79,4 +80,4 @@ class UpdateBook(APIView):
         update_book.save()
         serializers = BookSerializer(update_book)
 
-        return Response({'book' : serializers.data}, status=status.HTTP_200_OK)
+        return Response(serializers.data, status=status.HTTP_200_OK)
