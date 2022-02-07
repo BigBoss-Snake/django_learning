@@ -1,12 +1,14 @@
 import email
 from pyexpat import model
+from unicodedata import category
 from rest_framework import serializers
-from book.models import Books
+from book.models import Books, Category
 from users.models import User
 
 class BookSerializer(serializers.Serializer):
     author = serializers.CharField(max_length=200)
     title = serializers.CharField(max_length=200)
+    category = serializers.CharField(max_length=200)
     author_book = serializers.CharField(max_length=200)
 
     class Meta:
@@ -19,7 +21,8 @@ class BookSerializer(serializers.Serializer):
     def validate(self, data):
         author = data.get('author', None)
         title = data.get('title', None)
-        author_book = data.get('author_book', None)     
+        author_book = data.get('author_book', None)
+        category_book = data.get('category', None)     
         lol = User.objects.filter(email=author)
 
         if author is None:
@@ -37,6 +40,11 @@ class BookSerializer(serializers.Serializer):
                 'The author of the book is not entered    '
             )
 
+        if category_book is None:
+            raise serializers.ValidationError(
+                'The category book of the book is not entered    '
+            )        
+
         if not User.objects.filter(email=author):
             raise serializers.ValidationError(
                 'This author does not exist'
@@ -46,6 +54,7 @@ class BookSerializer(serializers.Serializer):
         return {
                 'author': author,
                 'title': title,
+                'category': category_book,
                 'author_book': author_book
             }
     
