@@ -1,30 +1,26 @@
 import jwt
-
-from datetime import datetime, timedelta
 from django.db import models
-from django.conf import settings 
+from django.conf import settings
 from django.contrib.auth.models import (
-	AbstractBaseUser, BaseUserManager, PermissionsMixin
+    AbstractBaseUser, BaseUserManager, PermissionsMixin
 )
 
+
 class UserManager(BaseUserManager):
-   
     def create_user(self, email, first_name, last_name, password=None):
-       
         if last_name is None:
             raise TypeError('Users must have a username.')
 
         if email is None:
             raise TypeError('Users must have an email address.')
 
-        user = self.model(email=self.normalize_email(email), first_name=first_name, last_name=last_name)
+        user = self.model(email=self.normalize_email(email), first_name=first_name, last_name=last_name)  # noqa: E501
         user.set_password(password)
         user.save()
 
         return user
 
     def create_superuser(self, email, first_name, last_name, password):
-        
         if password is None:
             raise TypeError('Superusers must have a password.')
 
@@ -41,6 +37,7 @@ class UserManager(BaseUserManager):
 
     def natural_key(self):
         return(self.email, self.last_name)
+
 
 class User(AbstractBaseUser, PermissionsMixin):
 
@@ -60,8 +57,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
-
-
     def token(self):
         return self._generate_jwt_token()
 
@@ -79,4 +74,3 @@ class User(AbstractBaseUser, PermissionsMixin):
         }, settings.SECRET_KEY, algorithm='HS256')
 
         return token.decode('utf-8')
-
