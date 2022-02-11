@@ -1,4 +1,3 @@
-from tracemalloc import DomainFilter
 from django.http import HttpResponse
 from rest_framework import status
 from rest_framework.permissions import AllowAny
@@ -9,9 +8,10 @@ from .renderers import UserJSONRenderer
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_str, force_bytes 
+from django.utils.encoding import force_str, force_bytes
 from django.core.mail import EmailMessage
 from users.models import User
+
 
 class RegistrationAPIView(APIView):
 
@@ -19,33 +19,31 @@ class RegistrationAPIView(APIView):
     serializer_class = RegistrationSerializer
 #    renderer_classes = (UserJSONRenderer,)
 
-
     def post(self, request):
         user = request.data.get('user', {})
         serializer = self.serializer_class(data=user)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        
+
         current_site = get_current_site(request)
         mail_subject = 'Activate your account.'
-        search_id = User.objects.get(email = user.get('email'))
+        search_id = User.objects.get(email=user.get('email'))
         user_token = search_id.token()
         uid = urlsafe_base64_encode(force_bytes(search_id.id))
-        
         message = render_to_string('acc_active_email.html', {
             'user': user.get('email'),
             'domain': current_site.domain,
             'uid': urlsafe_base64_encode(force_bytes(search_id.id)),
             'token': search_id.token(),
             })
-        
+
         to_email = user.get('email', None)
         email = EmailMessage(
                 mail_subject, message, to=[to_email]
         )
         email.send()
 
-        return Response(f'{current_site.domain}/users/activate/{uid}/{user_token}', status=status.HTTP_201_CREATED)
+        return Response(f'{current_site.domain}/users/activate/{uid}/{user_token}', status=status.HTTP_201_CREATED)  # noqa: E501
 
 
 def activate(request, uidb64, token):
@@ -54,13 +52,11 @@ def activate(request, uidb64, token):
         user = User.objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
-    
-    
     if user is not None and user.token() == token:
         user.is_active = True
         user.save()
 
-        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')  # noqa: E501
     else:
         return HttpResponse('Activation link is invalid!')
 

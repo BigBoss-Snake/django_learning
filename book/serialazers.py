@@ -11,11 +11,17 @@ class CategorySerialazer(serializers.Serializer):
         fields = ['category']
 
 
+class ValueSerialazer(serializers.Serializer):
+    title = serializers.CharField(max_length=15)
+
+
 class BookSerializer(serializers.Serializer):
     author = serializers.CharField(max_length=200)
     title = serializers.CharField(max_length=200)
     category = CategorySerialazer(many=True)
     author_book = serializers.CharField(max_length=200)
+    value = ValueSerialazer()
+    price = serializers.FloatField()
 
     class Meta:
         model = Books
@@ -29,6 +35,8 @@ class BookSerializer(serializers.Serializer):
         title = data.get('title', None)
         author_book = data.get('author_book', None)
         category_book = data.get('category', None)
+        value_book = data.get('value', None)
+        price_book = data.get('price', None)
 
         if author is None:
             raise serializers.ValidationError(
@@ -58,5 +66,7 @@ class BookSerializer(serializers.Serializer):
                 'author': author,
                 'title': title,
                 'category': category_book,
-                'author_book': author_book
+                'author_book': author_book,
+                'value': value_book,
+                'price': price_book
             }

@@ -19,11 +19,20 @@ class Category(models.Model):
         return self.category
 
 
+class Value(models.Model):
+    title = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.title
+
+
 class Books(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     category = models.ManyToManyField(Category)
     author_book = models.CharField(max_length=200)
+    value = models.ForeignKey(Value, on_delete=models.PROTECT)
+    price = models.FloatField()
 
     objects = BookManager()
 
