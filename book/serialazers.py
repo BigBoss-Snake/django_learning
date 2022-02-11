@@ -21,7 +21,7 @@ class BookSerializer(serializers.Serializer):
     category = CategorySerialazer(many=True)
     author_book = serializers.CharField(max_length=200)
     value = ValueSerialazer()
-    price = serializers.FloatField()
+    price = serializers.SerializerMethodField('get_calculate_price')
 
     class Meta:
         model = Books
@@ -35,7 +35,7 @@ class BookSerializer(serializers.Serializer):
         title = data.get('title', None)
         author_book = data.get('author_book', None)
         category_book = data.get('category', None)
-        value_book = data.get('value', None)
+        value_book = data.get('value', None).get('title', None)
         price_book = data.get('price', None)
 
         if author is None:
@@ -70,3 +70,10 @@ class BookSerializer(serializers.Serializer):
                 'value': value_book,
                 'price': price_book
             }
+
+    def get_calculate_price(self, obj):
+        if obj.value.title == 'Eur':
+            return obj.price * 85.53
+        elif obj.value.title == 'Usd':
+            return obj.price * 75.1
+        return obj.price
