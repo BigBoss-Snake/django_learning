@@ -1,3 +1,5 @@
+from django.http import HttpResponse
+import requests
 from rest_framework.response import Response
 from .models import Books
 from .renderers import BooksJSONRenderer
@@ -87,3 +89,10 @@ class SearchBook(APIView):
         else:
             books = Books.objects.filter(category__category=_category)
         return Response(BookSerializer(books, many=True).data, status=status.HTTP_200_OK)  # noqa: E501
+
+
+def request_cb(request):
+    url = 'http://www.cbr.ru/scripts/XML_daily.asp?'
+    data = requests.get(url)
+    print(data)
+    return HttpResponse(data)
