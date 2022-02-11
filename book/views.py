@@ -7,6 +7,13 @@ from rest_framework.permissions import AllowAny
 from rest_framework import status
 
 
+def create_dict(dict):
+    dict_book = []
+    for i in range(len(dict)):
+        dict_book.append({'book': BookSerializer(dict[i]).data})
+    return dict_book
+
+
 class CreateBook(APIView):
     permission_classes = (AllowAny,)
     serializer_class = BookSerializer
@@ -47,13 +54,7 @@ class ListBook(APIView):
 
     def get(self, request):
         all_book = Books.objects.all()
-
-        dict_book = []
-
-        for i in range(len(all_book)):
-            dict_book.append({'book': BookSerializer(all_book[i]).data})
-
-        return Response(dict_book, status=status.HTTP_200_OK)
+        return Response(create_dict(all_book), status=status.HTTP_200_OK)
 
 
 class UpdateBook(APIView):
@@ -82,7 +83,13 @@ class SearchBook(APIView):
 
     def get(self, request):
         parametrs = request.data.get('parametrs', None)
-        books = Books.objects.filter(title=parametrs.get('parametrs', None))
-        
-        return
-        
+        _title = parametrs.get('title', None)
+        _category = parametrs.get('category', None)
+
+        if _title and _category:
+            books = Books.objects.filter(title__icontains=_title).filter(category__category=_category)  # noqa: E501
+        elif _title:
+            books = Books.objects.filter(title__icontains=_title)
+        else:
+            books = Books.objects.filter(category__category=_category)
+        return Response(create_dict(books), status=status.HTTP_200_OK)
