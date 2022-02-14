@@ -1,12 +1,12 @@
-from django.http import HttpResponse
 import requests
 from rest_framework.response import Response
-from .models import Books
+from .models import Books, Value
 from .renderers import BooksJSONRenderer
 from rest_framework.views import APIView
 from .serialazers import BookSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework import status
+from xml.etree.ElementTree import fromstring
 
 
 class CreateBook(APIView):
@@ -31,7 +31,6 @@ class DetaelBook(APIView):
     def get(self, request, book_id):
         book = Books.objects.get(id=book_id)
         serializer = BookSerializer(book)
-        print(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -89,10 +88,3 @@ class SearchBook(APIView):
         else:
             books = Books.objects.filter(category__category=_category)
         return Response(BookSerializer(books, many=True).data, status=status.HTTP_200_OK)  # noqa: E501
-
-
-def request_cb(request):
-    url = 'http://www.cbr.ru/scripts/XML_daily.asp?'
-    data = requests.get(url)
-    print(data)
-    return HttpResponse(data)

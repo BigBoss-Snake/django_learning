@@ -21,6 +21,7 @@ class Category(models.Model):
 
 class Value(models.Model):
     title = models.CharField(max_length=15)
+    count = models.FloatField()
 
     def __str__(self):
         return self.title

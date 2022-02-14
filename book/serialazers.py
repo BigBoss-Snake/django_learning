@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from book.models import Books, Category
+from book.models import Books, Category, Value
 from users.models import User
 
 
@@ -20,8 +20,8 @@ class BookSerializer(serializers.Serializer):
     title = serializers.CharField(max_length=200)
     category = CategorySerialazer(many=True)
     author_book = serializers.CharField(max_length=200)
-    value = ValueSerialazer()
     price = serializers.SerializerMethodField('get_calculate_price')
+    value = ValueSerialazer()
 
     class Meta:
         model = Books
@@ -72,8 +72,13 @@ class BookSerializer(serializers.Serializer):
             }
 
     def get_calculate_price(self, obj):
+        eur_curs = Value.objects.get(title='Eur').count
+        usd_curs = Value.objects.get(title='Usd').count
+
         if obj.value.title == 'Eur':
-            return obj.price * 85.53
+            obj.value.title = 'Rub'
+            return obj.price * eur_curs
         elif obj.value.title == 'Usd':
-            return obj.price * 75.1
+            obj.value.title = 'Rub'
+            return obj.price * usd_curs
         return obj.price
