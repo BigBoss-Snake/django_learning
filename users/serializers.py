@@ -1,18 +1,16 @@
-from django.urls import is_valid_path
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from .models import User
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
-   
+
     password = serializers.CharField(
         max_length=128,
         min_length=8,
         write_only=True
     )
 
-    
     token = serializers.CharField(max_length=255, read_only=True)
 
     class Meta:
@@ -24,7 +22,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.Serializer):
-    
+
     email = serializers.CharField(max_length=255)
     first_name = serializers.CharField(max_length=255, read_only=True)
     last_name = serializers.CharField(max_length=255, read_only=True)
@@ -45,14 +43,13 @@ class LoginSerializer(serializers.Serializer):
                 'A password is required to log in.'
             )
 
-        if User.objects.get(email=email).is_active == False:
+        if User.objects.get(email=email).is_active is False:
             raise serializers.ValidationError(
                 'You need activated your account'
             )
-        
 
         user = authenticate(email=email, password=password)
-        
+
         if user:
             return {
                 'email': user.email,

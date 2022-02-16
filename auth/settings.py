@@ -2,7 +2,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-b(uwnzxsej+^ma75m0j%s@=!j6sa806lyifg%ep!@34+snndph'
+SECRET_KEY = 'django-insecure-b(uwnzxsej+^ma75m0j%s@=!j6sa806lyifg%ep!@34+snndph'   # noqa: E501
 
 DEBUG = True
 
@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -55,26 +56,26 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'django_db_1',
-        'USER' : 'user_name',
-        'PASSWORD' : 'password',
-        'HOST' : '127.0.0.1',
-        'PORT' : '5432',
+        'USER': 'user_name',
+        'PASSWORD': 'password',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',  # noqa: E501
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',  # noqa: E501
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',  # noqa: E501
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',  # noqa: E501
     },
 ]
 
@@ -101,3 +102,10 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'andreigorbachyow@gmail.com'
 EMAIL_HOST_PASSWORD = 'R2rus53kit'
 EMAIL_PORT = 587
+
+
+REDIS_HOST = '127.0.0.1'
+REDIS_PORT = '6379'
+BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT
+RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT
+CELERY_TASK_TRACK_STARTED = True

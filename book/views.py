@@ -1,12 +1,10 @@
-import requests
 from rest_framework.response import Response
-from .models import Books, Value
+from .models import Books
 from .renderers import BooksJSONRenderer
 from rest_framework.views import APIView
 from .serialazers import BookSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework import status
-from xml.etree.ElementTree import fromstring
 
 
 class CreateBook(APIView):
