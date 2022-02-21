@@ -21,6 +21,12 @@ app.autodiscover_tasks()
 
 
 @app.task
+def lol():
+    print('HelloWorld!')
+    return('Hello World!')
+
+
+@app.task
 def get_rate():
     from book.models import Value
     url = 'http://www.cbr.ru/scripts/XML_daily.asp?'
@@ -45,5 +51,9 @@ app.conf.beat_schedule = {
     'get rate': {
         'task': 'auth.celery.get_rate',
         'schedule': crontab(hour=6),
+    },
+    'test': {
+        'task': 'auth.celery.lol',
+        'schedule': crontab(),
     },
 }

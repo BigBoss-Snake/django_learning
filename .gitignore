@@ -152,3 +152,18 @@ cython_debug/
 #.idea/
 
 /.vscoce
+book/__pycache__/models.cpython-38.pyc
+book/__pycache__/renderers.cpython-38.pyc
+book/__pycache__/serialazers.cpython-38.pyc
+book/__pycache__/urls.cpython-38.pyc
+book/__pycache__/views.cpython-38.pyc
+docker/redis-data/dump.rdb
+users/__pycache__/serializers.cpython-38.pyc
+auth/__pycache__/settings.cpython-38.pyc
+auth/__pycache__/urls.cpython-38.pyc
+auth/__pycache__/wsgi.cpython-38.pyc
+book/__pycache__/models.cpython-38.pyc
+auth/__pycache__/settings.cpython-38.pyc
+book/__pycache__/models.cpython-38.pyc
+book/__pycache__/models.cpython-38.pyc
+auth/__pycache__/settings.cpython-38.pyc

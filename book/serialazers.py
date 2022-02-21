@@ -18,10 +18,10 @@ class ValueSerialazer(serializers.Serializer):
 class BookSerializer(serializers.Serializer):
     author = serializers.CharField(max_length=200)
     title = serializers.CharField(max_length=200)
-    category = CategorySerialazer(many=True)
     author_book = serializers.CharField(max_length=200)
+    category = CategorySerialazer(many=True)
     price = serializers.SerializerMethodField('get_calculate_price')
-    value = ValueSerialazer()
+    value = ValueSerialazer(many=False)
 
     class Meta:
         model = Books
