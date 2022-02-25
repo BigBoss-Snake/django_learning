@@ -2,14 +2,14 @@ version: '3.8'
 services:
 
 
-  web:
+  library-app:
     build:
       context: .
-    command: python3 manage.py runserver
-    volumes:
-      - :/auth
+    command: python3 manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
+    volumes:
+      - ./:/auth
   
   #Redis Service
   redis:
@@ -27,7 +27,7 @@ services:
       context: .
     command: celery --app auth worker --loglevel=info
     volumes:
-      - ./auth:/auth
+      - ./:/auth
     depends_on:
       - redis
 
@@ -37,7 +37,7 @@ services:
       context: .
     command: celery --app auth beat
     volumes:
-      - ./auth:/auth
+      - ./:/auth
     depends_on:
       - redis
 

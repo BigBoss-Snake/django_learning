@@ -5,13 +5,17 @@ from users.models import User
 class BookManager(models.Manager):
     def create_book(self, author, title, category, author_book, value, price):
         _author = User.objects.get(email=author)
-        # _category = category.get('category', None)  # noqa: E501
         _value = Value.objects.get(title=value)
-        _price = price
-        print(_price)
-        book = self.model(author=_author, title=title, author_book=author_book, value=_value, price=price)  # noqa: E501
+        _price = 8
+        print(len(category))
+        book = self.model(author=_author, title=title, author_book=author_book, value=_value, price=_price)  # noqa: E501
         book.save()
-        book.category.add(category)
+        dict_id_category = []
+        for object in category:
+            id_category = Category.objects.get(category=object['category']).id
+            dict_id_category.append(id_category)
+        _category = Category.objects.filter(id__in=dict_id_category)  # noqa: E501
+        book.category.add(*_category)
         return book
 
 

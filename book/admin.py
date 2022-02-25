@@ -8,9 +8,9 @@ class BooksAdmin(admin.ModelAdmin):
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('category', )
+    list_display = ('id', 'category')
 
 
 admin.site.register(Books, BooksAdmin)
-admin.site.register(Category)
+admin.site.register(Category, CategoryAdmin)
 admin.site.register(Value)
