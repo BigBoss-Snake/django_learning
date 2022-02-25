@@ -1,10 +1,18 @@
 from rest_framework.response import Response
-from .models import Books
+from .models import Books, Category
 from .renderers import BooksJSONRenderer
 from rest_framework.views import APIView
 from .serialazers import BookSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework import status
+
+
+def create_list_category(category):
+    dict_id_category = []
+    for object in category:
+        id_category = Category.objects.get(category=object['category']).id
+        dict_id_category.append(id_category)
+    return dict_id_category
 
 
 class CreateBook(APIView):
@@ -80,9 +88,13 @@ class SearchBook(APIView):
         _category = parametrs.get('category', None)
 
         if _title and _category:
-            books = Books.objects.filter(title__icontains=_title).filter(category__category=_category)  # noqa: E501
+            books = Books.objects.filter(title__icontains=_title).filter(category__id=create_list_category(_category))  # noqa: E501
         elif _title:
             books = Books.objects.filter(title__icontains=_title)
         else:
-            books = Books.objects.filter(category__category=_category)
+            id_categorys = create_list_category(_category)
+            print(id_categorys)
+            books = Books.objects.all()  # noqa: E501
+            for id in id_categorys:
+                books = books.filter(category__id=id)  # noqa: E501
         return Response(BookSerializer(books, many=True).data, status=status.HTTP_200_OK)  # noqa: E501
