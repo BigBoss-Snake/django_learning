@@ -11,12 +11,16 @@ class CategorySerialazer(serializers.Serializer):
         fields = ['category']
 
 
+class SwaggerCategory(serializers.Serializer):
+    results = CategorySerialazer(many=True)
+
+
 class ValueSerialazer(serializers.Serializer):
     title = serializers.CharField(max_length=15)
 
 
 class BookSerializer(serializers.Serializer):
-    author = serializers.CharField(max_length=200)
+    author = serializers.CharField(max_length=200, label='lol')
     title = serializers.CharField(max_length=200)
     author_book = serializers.CharField(max_length=200)
     category = CategorySerialazer(many=True)
@@ -35,7 +39,7 @@ class BookSerializer(serializers.Serializer):
         title = data.get('title', None)
         author_book = data.get('author_book', None)
         category_book = data.get('category', None)
-        value_book = data.get('value', None).get('title', None)
+        value_book = data.get('value', None)
         price_book = data.get('price', None)
 
         if author is None:
@@ -75,10 +79,10 @@ class BookSerializer(serializers.Serializer):
         eur_curs = Value.objects.get(title='Eur').count
         usd_curs = Value.objects.get(title='Usd').count
 
-        if obj.value.title == 'Eur':
-            obj.value.title = 'Rub'
+        if obj.value == 'Eur':
+            obj.value = 'Rub'
             return obj.price * eur_curs
-        elif obj.value.title == 'Usd':
+        elif obj.value == 'Usd':
             obj.value.title = 'Rub'
             return obj.price * usd_curs
         return obj.price
