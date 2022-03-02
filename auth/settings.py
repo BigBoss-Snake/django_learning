@@ -10,6 +10,7 @@ ALLOWED_HOSTS = []
 
 
 INSTALLED_APPS = [
+    'drf_yasg',
     'book.apps.BookConfig',
     'users.apps.UsersConfig',
     'django.contrib.admin',
@@ -19,7 +20,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_celery_beat',
-    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -56,11 +56,11 @@ WSGI_APPLICATION = 'auth.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'django_db_1',
+        'NAME': 'django_db',
         'USER': 'user_name',
         'PASSWORD': 'password',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'HOST': '0.0.0.0',
+        'PORT': '5433',
     }
 }
 
