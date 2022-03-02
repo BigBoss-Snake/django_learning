@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: user_name
       POSTGRES_PASSWORD: password
       POSTGRES_DB: django_db
-      
+
   library-app:
     build:
       context: .

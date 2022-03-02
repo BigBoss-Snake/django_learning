@@ -6,7 +6,7 @@ class BookManager(models.Manager):
     def create_book(self, author, title, category, author_book, value, price):
         _author = User.objects.get(email=author)
         _value = Value.objects.get(title=value)
-        _price = 8
+        _price = price
         print(len(category))
         book = self.model(author=_author, title=title, author_book=author_book, value=_value, price=_price)  # noqa: E501
         book.save()

@@ -25,7 +25,8 @@ class BookSerializer(serializers.Serializer):
     title = serializers.CharField(max_length=200)
     author_book = serializers.CharField(max_length=200)
     category = CategorySerialazer(many=True)
-    price = serializers.SerializerMethodField('get_calculate_price')
+    price = serializers.FloatField()
+    current_price = serializers.SerializerMethodField('get_calculate_price')
     value = ValueSerialazer(many=False)
 
     class Meta:

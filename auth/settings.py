@@ -6,7 +6,7 @@ SECRET_KEY = 'django-insecure-b(uwnzxsej+^ma75m0j%s@=!j6sa806lyifg%ep!@34+snndph
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 INSTALLED_APPS = [
@@ -59,6 +59,7 @@ DATABASES = {
         'NAME': 'django_db',
         'USER': 'user_name',
         'PASSWORD': 'password',
+        # 'HOST': 'pg-db',
         'HOST': '0.0.0.0',
         'PORT': '5433',
     }

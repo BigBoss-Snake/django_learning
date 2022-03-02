@@ -35,7 +35,7 @@ class CreateBook(APIView):
         responses={201: book_response}
     )
     def post(self, request):
-        book = request.data.get('book', {})
+        book = request.data.get('book', None)
         serializer = self.serializer_class(data=book)
         serializer.is_valid(raise_exception=True)
         serializer.save()
