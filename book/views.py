@@ -6,7 +6,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from .models import Books, Category
 from .renderers import BooksJSONRenderer
-from .serialazers import BookSerializer, CategorySerialazer
+from .serialazers import BookSerializer, SearchSerialazer
 
 
 def search_book_categorys(category):
@@ -79,7 +79,7 @@ class ListBook(APIView):
     auth_response = openapi.Response('Список получен')
 
     @swagger_auto_schema(operation_description="Метод получения списка всех книг",  # noqa: E501
-                         responses={204: auth_response})
+                         responses={200: auth_response})
     def get(self, request):
         all_book = Books.objects.all()
         return Response(BookSerializer(all_book, many=True).data, status=status.HTTP_200_OK)  # noqa: E501
@@ -91,49 +91,11 @@ class UpdateBook(APIView):
     serializer_class = BookSerializer
     renderer_classes = (BooksJSONRenderer, )
 
-    book_response = openapi.Response('Книга создана')
+    book_response = openapi.Response('Книга обновлена')
 
     @swagger_auto_schema(
-        operation_description="Метод обновления инфрмации о книге в БД. ",  # noqa: E501
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            required=['author', 'title', 'category', 'author_book', 'price', 'value'],  # noqa: E501
-            properties={
-                'author': openapi.Schema(
-                    description="Почта автора",
-                    type=openapi.TYPE_STRING,
-                    example="Belyev@mail.com"
-                ),
-                'title': openapi.Schema(
-                    description="Название книги",
-                    type=openapi.TYPE_STRING,
-                    example="Lord of the World"
-                ),
-                'category': openapi.Schema(
-                    description="Жанры книги",
-                    type=openapi.TYPE_ARRAY,
-                    items={
-                        "type": "string"
-                    }
-
-                ),
-                'author_book': openapi.Schema(
-                    description="ФИО Автора",
-                    type=openapi.TYPE_STRING,
-                    example="Aleksandr Belyev"
-                ),
-                'price': openapi.Schema(
-                    description="Цена книги",
-                    type=openapi.TYPE_NUMBER,
-                    example=8.0
-                ),
-                'value': openapi.Schema(
-                    description="Валюта",
-                    type=openapi.TYPE_STRING,
-                    example="Usd"
-                ),
-            },
-        ),
+        operation_description="Метод обновления информации о книге в БД.",  # noqa: E501
+        request_body=BookSerializer(),
         responses={200: book_response}
     )
     def put(self, request):
@@ -154,9 +116,13 @@ class SearchBook(APIView):
     serializer_class = BookSerializer
     renderer_classes = (BooksJSONRenderer, )
 
-    book_response = openapi.Response('Книга создана')
+    book_response = openapi.Response('Результат поиска')
 
-    def get(self, request):
+    @swagger_auto_schema(
+        operation_description="Метод поиска книги в БД по названию книги и/или категории.",  # noqa: E501
+        request_body=SearchSerialazer,
+        responses={200: book_response})
+    def post(self, request):
         parametrs = request.data.get('parametrs', None)
         _title = parametrs.get('title', None)
         _category = parametrs.get('category', None)

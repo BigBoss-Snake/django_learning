@@ -11,8 +11,9 @@ class CategorySerialazer(serializers.Serializer):
         fields = ['category']
 
 
-class SwaggerCategory(serializers.Serializer):
-    results = CategorySerialazer(many=True)
+class SearchSerialazer(serializers.Serializer):
+    title = serializers.CharField(max_length=200)
+    category = CategorySerialazer(many=True)
 
 
 class ValueSerialazer(serializers.Serializer):

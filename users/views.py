@@ -1,24 +1,32 @@
 from django.http import HttpResponse
-from rest_framework import status
-from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from .serializers import RegistrationSerializer, LoginSerializer
-from .renderers import UserJSONRenderer
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.core.mail import EmailMessage
+from django.utils.encoding import force_str, force_bytes
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_str, force_bytes
-from django.core.mail import EmailMessage
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from users.models import User
+from .serializers import RegistrationSerializer, LoginSerializer
+from .renderers import UserJSONRenderer
 
 
 class RegistrationAPIView(APIView):
 
     permission_classes = (AllowAny,)
     serializer_class = RegistrationSerializer
-#    renderer_classes = (UserJSONRenderer,)
 
+    auth_response = openapi.Response('пользователь создан')
+
+    @swagger_auto_schema(
+        operation_description="Метод создания пользователя в БД.",
+        request_body=RegistrationSerializer,
+        responses={201: auth_response}
+    )
     def post(self, request):
         user = request.data.get('user', {})
         serializer = self.serializer_class(data=user)
@@ -66,6 +74,13 @@ class LoginAPIView(APIView):
     renderer_classes = (UserJSONRenderer,)
     serializer_class = LoginSerializer
 
+    auth_response = openapi.Response('пользователь создан')
+
+    @swagger_auto_schema(
+        operation_description="Метод создания пользователя в БД.",
+        request_body=LoginSerializer,
+        responses={200: auth_response}
+    )
     def post(self, request):
         user = request.data.get('user', {})
 
